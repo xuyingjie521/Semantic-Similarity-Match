@@ -105,12 +105,12 @@ v2.0 |Big Roberta->distill——>Tiny Roberta
 
 * **finetune-Tiny-Roberta**
 
-![finetune-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/finetune-Tiny-Roberta-picture.png)
+![finetune-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/finetune-Tiny-Roberta-picture.png)
 
 
 * **distilled-Tiny-Roberta (to do...)**
 
-![distilled-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/distilled-Tiny-Roberta-picture.png)
+![distilled-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)
 
 
 ## 6、评估结果
@@ -119,7 +119,7 @@ v2.0 |Big Roberta->distill——>Tiny Roberta
 
 * **原始Tiny-Roberta finetune下效果:**
 
-![效果1](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/test_result1.png)
+![效果1](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/test_result1.png)
 
 
 参考对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
