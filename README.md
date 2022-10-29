@@ -2,18 +2,16 @@
 此开源hub是基于Tensorflow2.x实现文本相似度匹配等项目
 
 ## 1、项目介绍
-本项目源于QA对话系统中的文本相似度检索的精排阶段，可抽象为文本相似度匹配任务；
+本项目源于QA对话系统中的文本相似度检索的精排阶段，可抽象为文本相似度匹配任务； 文本相似度匹配中特征的提取一般为静态词向量和动态词向量两种，本项目基于预训练模型的动态词向量；
 
-文本相似度匹配中特征的提取一般为静态词向量和动态词向量两种，本项目基于预训练模型的动态词向量；
-
-由于位于检索的精排阶段，考虑到推理时延，需用浅层模型，本项目以Tiny Roberta为 baseline进行实验，后续版本会再次基础上进行优化，持续更新中...
+由于位于检索的精排阶段，考虑到推理时延，需用浅层模型，本项目以Tiny Roberta为 baseline进行实验，后续版本会再次基础上对评价指标进行持续优化，更新中...
 
 
 ## 2、数据集来源
 
 * **数据集来源：[QA_corpus]()**
 
-* **目前数据集情况**
+* **数据集情况**
 
 type     |pair(个)
 :-------|---
@@ -36,8 +34,10 @@ test |约 1w
 
 *注：根据情况在 config/.yaml、config.py 中配置
 
+
 ## 4、项目结构
 
+```
 .
 ├── LICENSE
 ├── README.md
@@ -92,12 +92,13 @@ test |约 1w
 │   ├── print_metrics.py
 │   └── send_email.py
 └── write_data_csv_to_seq_file.py
+```
 
 
 ## 5、版本更新
 Version |Describe
 :-------|---
-v1.0 |预训练Tiny Roberta：baseline
+v1.0 |原始Tiny Roberta：baseline
 v2.0 |Big Roberta->distill——>Tiny Roberta
 
   
