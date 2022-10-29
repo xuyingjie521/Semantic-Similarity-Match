@@ -33,21 +33,21 @@ def main(config):
     # 数据处理
     process_data(config)
     # dataset
-    batch_size = config.batch_size_per_replica * strategy.num_replicas_in_sync
-    valid_batch_size = config.valid_batch_size * strategy.num_replicas_in_sync
-    test_batch_size = config.test_batch_size * strategy.num_replicas_in_sync
-    train_dataset = config.dataset.train.shuffle(5000).cache().batch(batch_size, drop_remainder=True).prefetch(
-        strategy.num_replicas_in_sync)
-    valid_dataset = config.dataset.valid.shuffle(5000).cache().batch(valid_batch_size, drop_remainder=True)
-    # batch_size = config.batch_size_per_replica
-    # valid_batch_size = config.valid_batch_size
-    # test_batch_size = config.test_batch_size
-    # train_dataset = config.dataset.train.shuffle(5000).cache().batch(batch_size, drop_remainder=True)
+    # batch_size = config.batch_size_per_replica * strategy.num_replicas_in_sync
+    # valid_batch_size = config.valid_batch_size * strategy.num_replicas_in_sync
+    # test_batch_size = config.test_batch_size * strategy.num_replicas_in_sync
+    # train_dataset = config.dataset.train.shuffle(5000).cache().batch(batch_size, drop_remainder=True).prefetch(
+    #     strategy.num_replicas_in_sync)
     # valid_dataset = config.dataset.valid.shuffle(5000).cache().batch(valid_batch_size, drop_remainder=True)
+    batch_size = config.batch_size_per_replica
+    valid_batch_size = config.valid_batch_size
+    test_batch_size = config.test_batch_size
+    train_dataset = config.dataset.train.shuffle(5000).cache().batch(batch_size, drop_remainder=True)
+    valid_dataset = config.dataset.valid.shuffle(5000).cache().batch(valid_batch_size, drop_remainder=True)
 
-    # 根据类型训练模型
-    with strategy.scope():
-        model, callbacks, class_weight = similarity_model(config)
+    # 可分布式训练模型
+    # with strategy.scope():
+    model, callbacks, class_weight = similarity_model(config)
 
     # 模型训练
     print("\n\nStart Training.\n")
@@ -93,7 +93,7 @@ def main(config):
     model.compiled_metrics = None
     model.save(saved_model_dir, save_format='tf')
 
-    # 保存ckpt, 便于fine-tune时加载
+    # 保存ckpt, 便于进一步fine-tune时加载
     """
     ckpt_dir = 'iterative_model_ckpt'
     if "multiround" in config.model_yaml:

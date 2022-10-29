@@ -8,7 +8,7 @@ lr_decay_rate: 0.85
 dropout_keep_prob: 0.9
 hidden_size: 512
 
-max_sequence_length: 38
+max_sequence_length: 40
 
 # pre-train model type.
 

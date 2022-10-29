@@ -37,7 +37,7 @@ def similarity_model(config):
     bert_encoder.build([[None, None], [None, None]])
     bert_encoder.load_bert(bert_config, bert_checkpoint_file)
     bert_encoder.trainable = pre_train_trainable
-    _, cls_output, _ = bert_encoder([text, type_id])
+    ner_logist, cls_output, _ = bert_encoder([text, type_id])
 
     # similarity
     similarity = tf.keras.layers.Dense(hidden_size,
