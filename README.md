@@ -104,13 +104,27 @@ v2.0 |Big Roberta->distill——>Tiny Roberta
 ## 6、模型结构
 
 * **finetune-Tiny-Roberta**
-![finetune-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/v1.0模型结构.jpeg)
 
-* **distilled-Tiny-Roberta**
-![distilled-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/v2.0模型结构.jpeg)
+![finetune-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/finetune-Tiny-Roberta-picture.png)
 
 
+* **distilled-Tiny-Roberta (to do...)**
+
+![distilled-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/distilled-Tiny-Roberta-picture.png)
+
+
+## 6、评估结果
+
+运行 run_tasks.py 开始训练.
+
+* **原始Tiny-Roberta finetune下效果:**
+
+![效果1](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/test_result1.png)
+
+
+参考对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
   
+
 ## 交流
 
 本项目作为笔者在之前工作中项目背景下的抽象出的NLP任务demo和trick。 源码和数据（实验数据）已经在项目中给出。
