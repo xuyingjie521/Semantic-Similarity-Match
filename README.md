@@ -101,6 +101,15 @@ Version |Describe
 v1.0 |原始Tiny Roberta：baseline
 v2.0 |Big Roberta->distill——>Tiny Roberta
 
+## 6、模型结构
+
+* **finetune-Tiny-Roberta**
+![finetune-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/v1.0模型结构.jpeg)
+
+* **distilled-Tiny-Roberta**
+![distilled-Tiny-Roberta](/Users/yingjie.xu/PycharmProjects/NioProject/Semantic-Similarity-Match/images/v2.0模型结构.jpeg)
+
+
   
 ## 交流
 
