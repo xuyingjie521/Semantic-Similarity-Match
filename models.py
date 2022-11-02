@@ -46,7 +46,7 @@ def similarity_model(config):
                                        name="similarity_ffw0")(cls_output)
     similarity = tf.keras.layers.Dropout(rate=1 - dropout_keep_prob)(similarity)
     similarity = tf.keras.layers.Dense(num_classes,
-                                       activation='softmax',
+                                       activation='sigmoid',
                                        trainable=similarity_trainable,
                                        name="similarity")(similarity)
 
@@ -55,8 +55,8 @@ def similarity_model(config):
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
-    loss = {"similarity": tf.keras.losses.CategoricalCrossentropy()}
-    metric = {"similarity": [tf.keras.metrics.CategoricalAccuracy(),
+    loss = {"similarity": tf.keras.losses.BinaryCrossentropy()}
+    metric = {"similarity": [tf.keras.metrics.BinaryCrossentropy(),
                              tfa.metrics.F1Score(num_classes=num_classes,
                                                  average='micro')]}
 
