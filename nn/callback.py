@@ -70,6 +70,43 @@ class WeightF1(tf.keras.callbacks.Callback):
         logs["val_weighted_f1"] = val_weighted_f1
 
 
+class F1Score(tf.keras.metrics.Metric):
+    __doc__ = "结合tf.keras.metric的计算原理实现precision,recall,f1的metrics"
+
+    def __init__(self, thresholds=0.5, name='f1', **kwargs):
+        super(F1Score, self).__init__(name=name, **kwargs)
+        self.f1 = self.add_weight(name='f1', initializer='zeros')
+        self.tp = self.add_weight(name='tp', initializer='zeros')
+        self.fp = self.add_weight(name='fp', initializer='zeros')
+        self.fn = self.add_weight(name='fn', initializer='zeros')
+        self.thresholds = thresholds
+
+    def update_state(self, y_true, y_pred, sample_weight=None):
+        min_delta = 1e-6
+        y_pred = tf.cast(tf.where(y_pred > self.thresholds, 1, 0), tf.int8)
+        y_true = tf.cast(y_true, tf.int8)
+
+        tp = tf.math.count_nonzero(y_pred * y_true, dtype=tf.float32)
+        fp = tf.math.count_nonzero(y_pred * (1 - y_true), dtype=tf.float32)
+        fn = tf.math.count_nonzero((1 - y_pred) * y_true, dtype=tf.float32)
+
+        self.tp.assign_add(tp)
+        self.fp.assign_add(fp)
+        self.fn.assign_add(fn)
+
+        self.f1.assign(2 * self.tp / (2 * self.tp + self.fp + self.fn + min_delta))
+
+    def result(self):
+        return self.f1
+
+    def reset_state(self):
+        # The state of the metric will be reset at the start of each epoch.
+        self.f1.assign(0.)
+        self.tp.assign(0.)
+        self.fp.assign(0.)
+        self.fn.assign(0.)
+
+
 class PrintBest(tf.keras.callbacks.Callback):
     def __init__(self, monitor, mode="max"):
 

@@ -4,7 +4,7 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 from nn.loss import CategoricalCrossentropyWithMask, SparseCategoricalCrossentropyWithMask
 from nn.metric import F1ScoreWithMask, SparseF1ScoreWithMask
-from nn.callback import EarlyStoppingWithWeightF1, PrintWeightF1, PrintBest, WeightF1, common_callbacks, PrintCRFParams
+from nn.callback import EarlyStoppingWithWeightF1, PrintWeightF1, PrintBest, WeightF1, common_callbacks, F1Score
 from nn.layer import EmbeddingUnique, DownSample, TwoDAttention, PositionalEncoding, TransformerEncoderLayer, \
     AlbertEncoder, ScaledDotProductAttention, BertEncoder
 from nn.lr_scheduler import create_learning_rate_scheduler
@@ -57,8 +57,7 @@ def similarity_model(config):
 
     loss = {"similarity": tf.keras.losses.BinaryCrossentropy()}
     metric = {"similarity": [tf.keras.metrics.BinaryCrossentropy(),
-                             tfa.metrics.F1Score(num_classes=num_classes,
-                                                 average='micro')]}
+                             F1Score()]}
 
     optimizer = tfa.optimizers.LazyAdam(learning_rate=learning_rate)
 
@@ -67,8 +66,8 @@ def similarity_model(config):
                   metrics=metric)
     model.summary()
 
-    callbacks = [PrintBest(monitor="val_f1_score"),
-                 tf.keras.callbacks.EarlyStopping(monitor="val_f1_score",
+    callbacks = [PrintBest(monitor="val_f1"),
+                 tf.keras.callbacks.EarlyStopping(monitor="val_f1",
                                                   patience=config.patience,
                                                   restore_best_weights=True,
                                                   mode="max"),
