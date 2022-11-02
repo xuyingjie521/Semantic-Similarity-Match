@@ -20,8 +20,23 @@ def print_table(metrics, val):
     print("-" * (_max * 2 + 5))
 
 
-def cal_metrics(y_true, y_pred):
+def binary_cal_metrics(y_true, y_pred):
     labels = [0, 1]
+    # 评价预测效果，计算混淆矩阵
+    print(metrics.classification_report(y_true,
+                                        y_pred.round(),
+                                        labels=labels,
+                                        zero_division=0,
+                                        digits=4))
+
+    confm = metrics.confusion_matrix(y_true,
+                                     y_pred.round(),
+                                     labels=labels)
+    print("confusion matrix=", confm)
+
+
+def multiclass_cal_metrics(y_true, y_pred):
+    labels = [0, 1, 2, 3]  # 例如 num_classes = 4
     # 评价预测效果，计算混淆矩阵
     print(metrics.classification_report(np.argmax(y_true, axis=1),
                                         np.argmax(y_pred, axis=1),

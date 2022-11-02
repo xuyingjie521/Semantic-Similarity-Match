@@ -82,7 +82,7 @@ def main(config):
     for y_true in test_dataset_y:
         test_y_true.append(y_true.numpy().tolist())
 
-    print_metrics.cal_metrics(test_y_true, test_y_pred)
+    print_metrics.binary_cal_metrics(test_y_true, test_y_pred)
 
     # f1-max最佳模型保存为 save_format='tf':pb格式
     print("\n\nSave Model.\n")
