@@ -80,15 +80,15 @@ def process_feeds(config):
                 data = config.feeds[feed].data[_type]
                 ids = tokenizer.batch_encode(data)
                 # 转one-hot形式：适用于多分类
-                # from tensorflow.keras.utils import to_categorical
-                # ids_new = to_categorical(ids)
+                from tensorflow.keras.utils import to_categorical
+                ids_new = to_categorical(ids, config.num_classes)
 
                 if "binary" in config.feeds[feed].data_type:
                     assert tokenizer.vocabsize == 2
-                    config.feeds[feed].ids[_type] = ids
+                    config.feeds[feed].ids[_type] = ids_new
                     config.feeds[feed].vocabsize = 1  # 单分类
                 else:
-                    config.feeds[feed].ids[_type] = ids
+                    config.feeds[feed].ids[_type] = ids_new
         print("process {} finish".format(feed))
     print("process feed finish")
 

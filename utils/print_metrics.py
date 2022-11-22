@@ -36,7 +36,7 @@ def binary_cal_metrics(y_true, y_pred):
 
 
 def multiclass_cal_metrics(y_true, y_pred):
-    labels = [0, 1, 2, 3]  # 例如 num_classes = 4
+    labels = [0, 1]  # 例如 num_classes = 2
     # 评价预测效果，计算混淆矩阵
     print(metrics.classification_report(np.argmax(y_true, axis=1),
                                         np.argmax(y_pred, axis=1),

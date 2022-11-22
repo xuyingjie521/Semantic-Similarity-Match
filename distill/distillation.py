@@ -42,19 +42,18 @@ class Distiller(tf.keras.Model):
 
 		teacher_logits = self.teacher(x, training=False)  # training=False 教师模型只推理
 		with tf.GradientTape() as tape:
-			student_logits = self.student(x, training=True)  # training=True 学生模型只训练
+			student_logits, _ = self.student(x, training=True)  # training=True 学生模型只训练
 			student_loss = self.student_loss_fn(y, student_logits)
-			# 二分类用sigmoid，多分类可选softmax
-			distill_loss = self.distill_loss_fn(tf.nn.sigmoid(teacher_logits / self.temperature),
-			                                    tf.nn.sigmoid(student_logits / self.temperature))
+			distill_loss = self.distill_loss_fn(tf.nn.softmax(teacher_logits / self.temperature, axis=1),
+			                                    tf.nn.softmax(student_logits / self.temperature, axis=1))
 
 			loss = self.alpha * student_loss + (1 - self.alpha) * (self.temperature ** 2) * distill_loss
 		trainable_vars = self.student.trainable_variables
 		gradients = tape.gradient(loss, trainable_vars)
 		self.optimizer.apply_gradients(zip(gradients, trainable_vars))
 
-		self.compiled_metrics.update_state(y, tf.nn.sigmoid(student_logits))
-		train_acc.update_state(y, tf.nn.sigmoid(student_logits))
+		self.compiled_metrics.update_state(y, tf.nn.softmax(student_logits))
+		train_acc.update_state(y, tf.nn.softmax(student_logits))
 		t_acc = train_acc.result()
 		train_acc.reset_states()
 		result = {m.name: m.result() for m in self.metrics}
@@ -68,11 +67,11 @@ class Distiller(tf.keras.Model):
 		data = data_adapter.expand_1d(data)
 		x, y, sample_weight = data_adapter.unpack_x_y_sample_weight(data)
 
-		student_logits = self.student(x, training=False)  # training=False 学生模型只推理
+		student_logits, _ = self.student(x, training=False)  # training=False 学生模型只推理
 		student_loss = self.student_loss_fn(y, student_logits)
 
-		self.compiled_metrics.update_state(y, tf.nn.sigmoid(student_logits))
-		valid_acc.update_state(y, tf.nn.sigmoid(student_logits))
+		self.compiled_metrics.update_state(y, tf.nn.softmax(student_logits))
+		valid_acc.update_state(y, tf.nn.softmax(student_logits))
 		v_acc = valid_acc.result()
 		valid_acc.reset_states()
 		results = {m.name: m.result() for m in self.metrics}
@@ -129,8 +128,8 @@ def TeacherModel(config):
 	model = tf.keras.Model(inputs=inputs, outputs=outputs, name="teacher_model")
 
 	model.compile(optimizer=tfa.optimizers.LazyAdam(learning_rate=teacher_learning_rate),
-	              # 由于输出是 logits，所以 from_logits=True来完成sigmoid(或softmax)计算
-	              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+	              # 由于输出是 logits，所以 from_logits=True来完成 softmax 计算
+	              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
 	              metrics=[F1Score(), "accuracy"])
 
 	callbacks = [PrintBest(monitor="val_f1"),
@@ -184,9 +183,11 @@ def StudentModel(config):
 	                                       activation=None,
 	                                       trainable=similarity_trainable,
 	                                       name="student_logits")(dropout_out)
+	# 这里的输出是 logits经softmax激活后的结果，用于predict输出
+	student_logits_softmax = tf.keras.layers.Activation('softmax', name='student_logits_softmax')(student_logits)
 
 	inputs = [text, type_id]
-	outputs = [student_logits]
+	outputs = [student_logits, student_logits_softmax]
 
 	model = tf.keras.Model(inputs=inputs, outputs=outputs, name="student_model")
 

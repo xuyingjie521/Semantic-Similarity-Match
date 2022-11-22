@@ -46,7 +46,7 @@ crf:
 inputs: ["text"]
 targets: ["similarity"]
 
-num_classes: 1
+num_classes: 2
 
 # data feed handle.
 feeds:

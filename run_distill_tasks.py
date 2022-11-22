@@ -71,13 +71,13 @@ def main(config):
 
 	distiller.compile(optimizer=tfa.optimizers.LazyAdam(learning_rate=config.learning_rate),
 	                  metrics=[F1Score()],
-	                  # 由于输出是 logits，所以 from_logits=True来完成sigmoid(或softmax)计算
-	                  student_loss_fn=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+	                  # 由于输出是 logits，所以 from_logits=True来完成 softmax 计算
+	                  student_loss_fn=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
 	                  distill_loss_fn=tf.keras.losses.KLDivergence(),  # loss = y_true * log(y_true / y_pred)
 	                  alpha=config.alpha,
 	                  temperature=config.temperature)
 
-	distiller.student.summary()
+	# distiller.student.summary()
 	# 训练 distiller 中的 student model
 	_ = distiller.fit(
 		train_dataset,
@@ -87,6 +87,31 @@ def main(config):
 		verbose=2)
 	result = distiller.evaluate(valid_dataset, verbose=0)
 	print_metrics.print_table(distiller.metrics_names, result)
+
+	# f1-max最佳的实例model来评估测试集
+	print("\n\nTest Prediction.\n")
+	test_dataset_x = config.dataset.inputs['test']
+	test_dataset_y = config.dataset.targets['test']
+	text_ids, type_ids = [], []
+	for element in test_dataset_x:
+		text_id = element[0].numpy()  # shape=(max_len, )
+		type_id = element[1].numpy()
+		text_ids.append(text_id)  # shape=(sample_num, max_len)
+		type_ids.append(type_id)
+	input_tokens_ids = tf.convert_to_tensor(np.array(text_ids), dtype=tf.float32)
+	input_segments_ids = tf.convert_to_tensor(np.array(type_ids), dtype=tf.float32)
+	inputs = [input_tokens_ids, input_segments_ids]
+	test_y_logits, test_y_logits_softmax = distiller.student.predict(inputs,
+	                                                                 batch_size=test_batch_size,
+	                                                                 verbose=1)
+	print("test_y_pred=", test_y_logits)
+	print("test_y_logits_softmax=", test_y_logits_softmax)
+
+	test_y_true = []
+	for y_true in test_dataset_y:
+		test_y_true.append(y_true.numpy().tolist())
+
+	print_metrics.multiclass_cal_metrics(test_y_true, test_y_logits_softmax)
 
 	# f1-max最佳模型保存为 save_format='tf':pb格式
 	print("\n\nSave Model.\n")
