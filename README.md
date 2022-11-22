@@ -108,7 +108,7 @@ v2.0 |Big Roberta->distill->Tiny Roberta
 ![finetune-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/finetune-Tiny-Roberta-picture.png)
 
 
-* **Big Roberta->distill->Tiny Roberta (to do...)**
+* **Big Roberta->distill->Tiny Roberta 详见[蒸馏要点解读与实现](https://github.com/xuyingjie521/Semantic-Similarity-Match/tree/main/distill)**
 
 ![distilled-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)
 
