@@ -4,7 +4,7 @@ from sklearn import metrics
 
 
 def print_table(metrics, val):
-    assert len(metrics) > 0 and len(metrics) == len(val)
+    # assert len(metrics) > 0 and len(metrics) == len(val)
 
     def wide_chars(s):
         return sum(unicodedata.east_asian_width(x) == 'W' for x in s)

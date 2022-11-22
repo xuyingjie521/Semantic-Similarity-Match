@@ -1,5 +1,6 @@
 # task model params.
 learning_rate: 0.0002
+teacher_learning_rate: 0.00003
 min_learning_rate: 0.000001
 lr_decay_epoch: 3
 warmup_epochs: 5
@@ -11,11 +12,18 @@ hidden_size: 512
 max_sequence_length: 40
 
 # pre-train model type.
-
 use_bert: True
 bert_type: bert
+
 bert_path: chinese_rbt4_L-4_H-768_A-12
 bert_layer_type: rbt4
+
+use_distill: True
+teacher_bert_path: chinese_rbt12_L-12_H-768_A-12  # MacBert-base
+teacher_bert_layer_type: rbt12
+
+alpha: 0.2
+temperature: 10
 
 # fine-tune params set. > fixed: line 24--line 62
 
@@ -63,5 +71,6 @@ test_batch_size: 64
 
 seed: 1024
 
-max_training_epochs: 50
+teacher_max_training_epochs: 50
+max_training_epochs: 100
 patience: 10

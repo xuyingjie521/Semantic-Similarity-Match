@@ -2,8 +2,11 @@ import math
 import tensorflow as tf
 
 
-def create_learning_rate_scheduler(config, verbose=0):
-    learning_rate = config.learning_rate
+def create_learning_rate_scheduler(config, model_type, verbose=0):
+    if config.use_distill and model_type == 'teacher':
+        learning_rate = config.teacher_learning_rate
+    else:
+        learning_rate = config.learning_rate
     warmup_epochs = config.warmup_epochs
     lr_decay_rate = config.lr_decay_rate
     lr_decay_epoch = config.lr_decay_epoch

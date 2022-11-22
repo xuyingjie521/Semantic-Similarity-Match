@@ -19,7 +19,7 @@ class Config(object):
         self.parser = argparse.ArgumentParser(description='model parameters')
 
         # add command line parameters
-        self.parser.add_argument('--model_yaml', type=str, default='faq_ranking_model.yaml')
+        self.parser.add_argument('--model_yaml', type=str, default='ranking_model.yaml')
         self.parser.add_argument('--data_dir', type=str, default='data')
         self.parser.add_argument('--max_sequence_length', type=int, default=None)
         self.parser.add_argument('--batch_size', type=int, default=None)
@@ -32,6 +32,7 @@ class Config(object):
         self.options = self.load_config(os.path.join(dir_name, '../') + config_dir + '/' + args.model_yaml)
 
         self.bert_path = os.path.join(dir_name, '../') + self.options.bert_path
+        self.teacher_bert_path = os.path.join(dir_name, '../') + self.options.teacher_bert_path
         if self.options.use_slimmed_albert:
             self.bert_path = self.bert_path + "_slim"
             self.options.variable_mapping_file = str(list(pathlib.Path(self.bert_path).glob('variable_name_mapping.json'))[0])
@@ -44,6 +45,14 @@ class Config(object):
             self.options.bert_checkpoint_file = str(list(pathlib.Path(self.bert_path).glob('*.ckpt.index'))[0]).replace('.index', '')
 
             self.options.bert_config = BertConfig.from_json_file(self.options.bert_config_file)
+
+        if self.options.use_bert and self.options.use_distill:
+            self.options.teacher_bert_config_file = str(
+                list(pathlib.Path(self.teacher_bert_path).glob('*_config_{}.json'.format(self.options.teacher_bert_layer_type)))[0])
+            self.options.teacher_bert_checkpoint_file = str(list(pathlib.Path(self.teacher_bert_path).glob('*.ckpt.index'))[0]).replace(
+                '.index', '')
+
+            self.options.teacher_bert_config = BertConfig.from_json_file(self.options.teacher_bert_config_file)
 
         for key, value in args.__dict__.items():
             if value is not None:
