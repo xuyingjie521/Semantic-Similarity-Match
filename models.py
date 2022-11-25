@@ -71,7 +71,7 @@ def similarity_model(config):
                                                   patience=config.patience,
                                                   restore_best_weights=True,
                                                   mode="max"),
-                 create_learning_rate_scheduler(config, verbose=1)
+                 create_learning_rate_scheduler(config.learning_rate, model_type="student", verbose=1)
                  ] + common_callbacks
 
     class_weight = None

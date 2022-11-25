@@ -70,7 +70,9 @@ def main(config):
 	distiller = Distiller(student, teacher)
 
 	distiller.compile(optimizer=tfa.optimizers.LazyAdam(learning_rate=config.learning_rate),
-	                  metrics=[F1Score()],
+	                  metrics=[tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+	                           F1Score(),
+	                           "accuracy"],
 	                  # 由于输出是 logits，所以 from_logits=True来完成 softmax 计算
 	                  student_loss_fn=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
 	                  distill_loss_fn=tf.keras.losses.KLDivergence(),  # loss = y_true * log(y_true / y_pred)
