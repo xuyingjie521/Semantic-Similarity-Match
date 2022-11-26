@@ -24,8 +24,6 @@ test |约 1w
 
 * **[支持模型](https://github.com/ymcui/Chinese-BERT-wwm):**
 
-* **chinese_L-12_H-768_A-12**
-
 * **chinese_rbt4_L-4_H-768_A-12**
 
 * **chinese_rbt6_L-6_H-768_A-12**
@@ -101,7 +99,7 @@ Version |Describe
 v1.0 |原始Tiny Roberta：baseline
 v2.0 |Big Roberta->distill->Tiny Roberta
 
-## 6、模型结构
+## 6、结构原理图
 
 * **finetune-Tiny-Roberta**
 
@@ -113,7 +111,7 @@ v2.0 |Big Roberta->distill->Tiny Roberta
 ![distilled-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)
 
 
-## 6、评估结果
+## 7、评估结果
 
 运行 run_tasks.py 开始训练.
 
@@ -122,7 +120,7 @@ v2.0 |Big Roberta->distill->Tiny Roberta
 ![效果1](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/test_result1.png)
 
 
-参考对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
+参考传统匹配模型对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
   
 
 ## 交流
