@@ -4,8 +4,12 @@
 ## 1、项目介绍
 本项目源于QA对话系统中的文本相似度检索的排序阶段，一般的排序模型可抽象为句对的文本相似度匹配任务； 文本相似度匹配中特征的提取一般为静态词向量和动态词向量两种，本项目基于预训练模型的动态词向量；
 
-由于位于检索的排序阶段，考虑到推理时延，需用浅层模型，本项目以Tiny Roberta为 baseline进行实验，后续版本会再次基础上对评价指标进行持续优化，更新中...
+由于位于检索的排序阶段，考虑到推理时延，需用浅层模型，本项目以Tiny Roberta为 baseline进行实验，后续版本会再次基础上对评价指标进行持续优化，更新中...  
 
+- 支持加载各种bert范式的预训练模型
+- 支持 tf2 分布式训练
+- 支持模型知识蒸馏
+- 支持tf2 pb格式与onnx格式转换用于部署  
 
 ## 2、数据集来源
 
@@ -18,7 +22,6 @@ type     |pair(个)
 train |约 10w
 valid |约 1w
 test |约 1w
-
 
 ## 3、支持模型
 
@@ -39,15 +42,20 @@ test |约 1w
 .
 ├── LICENSE
 ├── README.md
+├── chinese_rbt12_L-12_H-768_A-12
+│   ├── bert_config_rbt12.json
+│   ├── bert_model.ckpt.index
+│   ├── bert_model.ckpt.meta
+│   ├── variable_name_mapping.json
+│   └── vocab.txt
 ├── chinese_rbt4_L-4_H-768_A-12
 │   ├── bert_config_rbt4.json
-│   ├── bert_model.ckpt.data-00000-of-00001
 │   ├── bert_model.ckpt.index
 │   ├── bert_model.ckpt.meta
 │   ├── variable_name_mapping.json
 │   └── vocab.txt
 ├── config
-│   └── faq_ranking_model.yaml
+│   └── ranking_model.yaml
 ├── data
 │   ├── similarity_label_vocab.txt
 │   ├── test
@@ -62,16 +70,12 @@ test |约 1w
 │       ├── valid.label
 │       ├── valid.seq1.in
 │       └── valid.seq2.in
-├── data_csv
-│   ├── similarity_label_vocab.txt
-│   ├── test
-│   │   └── test.csv
-│   ├── train
-│   │   └── train.csv
-│   └── valid
-│       └── valid.csv
+├── distill
+│   ├── README.md
+│   └── distillation.py
 ├── models.py
-├── nn 
+├── new.md
+├── nn
 │   ├── activations.py
 │   ├── callback.py
 │   ├── crf.py
@@ -83,7 +87,15 @@ test |约 1w
 │   ├── config.py
 │   ├── data.py
 │   └── tokenization.py
+├── run_distill_tasks.py
 ├── run_tasks.py
+├── save_model2onnx
+│   ├── README.md
+│   ├── frozen_pb_model
+│   ├── inferONNX.py
+│   ├── onnx_model
+│   ├── qarank2frozenpb.py
+│   └── qarank2onnx.py
 ├── utils
 │   ├── addict.py
 │   ├── get_username.py
@@ -91,7 +103,6 @@ test |约 1w
 │   └── send_email.py
 └── write_data_csv_to_seq_file.py
 ```
-
 
 ## 5、版本更新
 Version |Describe
@@ -113,12 +124,25 @@ v2.0 |Big Roberta->distill->Tiny Roberta
 
 ## 7、评估结果
 
-运行 run_tasks.py 开始训练.
+运行 run_tasks.py 开始训练并评测.
 
-* **原始Tiny-Roberta finetune下效果:**
+* **原始Tiny-Roberta finetune的效果:**
 
-![效果1](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/test_result1.png)
+![效果1](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/test_result1.png)  
 
+* **原始big-Roberta(rbt12) finetune的效果:**  
+
+![效果2](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/rbt12_result.jpeg)
+
+* **Big Roberta->distill->Tiny Roberta finetune的效果:**  
+
+![效果2](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distill_result.jpeg)  
+
+模型 |acc |输入说明
+:-------|------|----
+原始Tiny Roberta |0.8252 |动态词向量
+Roberta(rbt12)->distill->Tiny Roberta |0.8400(+0.0148) |动态词向量
+Roberta(rbt12) |0.8482(+0.023) |动态词向量
 
 参考传统匹配模型对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
   
