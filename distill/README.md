@@ -73,5 +73,10 @@ student_loss = CategoricalCrossEntropy(from_logits=True)
 - 综合 loss 损失由前面两者加权和，其中 alpha 为调节soft-hard_label的超参数，一般选取小于0.1～0.3从而让分布调节到更接近后者，由于 softed softmax计算时需要除以 T，导致关联的soft_label的梯度幅值被缩小了 T^2 倍，所以在计算loss时考虑乘上 T^2 这个系数以补偿，
 loss = alpha * student_loss + (1-alpha) * T^2 * distillation_loss  
 
- ![蒸馏框架](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)
+ ![蒸馏框架](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)  
+
+- 蒸馏内部的学习过程图解如下：
+
+![图解知识蒸馏](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/图解知识蒸馏.jpeg)
+
 
