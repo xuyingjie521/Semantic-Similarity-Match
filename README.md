@@ -1,5 +1,5 @@
 # Semantic-Similarity-Match
-此开源hub基于Tensorflow2.x实现文本相似度匹配任务
+此开源hub基于Tensorflow2.x实现文本相似度匹配
 
 ## 1、项目介绍
 本项目源于QA对话系统中的文本相似度检索的排序阶段，一般的排序模型可抽象为句对的文本相似度匹配任务； 文本相似度匹配中特征的提取一般为静态词向量和动态词向量两种，本项目基于预训练模型的动态词向量；
@@ -10,6 +10,7 @@
 - 支持 tf2 分布式训练
 - 支持模型知识蒸馏
 - 支持tf2 pb格式与onnx格式转换用于部署  
+- 支持 Sentence Bert 微调及模型onnx转换
 
 ## 2、数据集来源
 
@@ -25,7 +26,7 @@ test |约 1w
 
 ## 3、支持模型
 
-* **[支持模型](https://github.com/ymcui/Chinese-BERT-wwm):**
+* **1. [支持模型](https://github.com/ymcui/Chinese-BERT-wwm):**
 
 * **chinese_rbt4_L-4_H-768_A-12**
 
@@ -35,82 +36,17 @@ test |约 1w
 
 * **注：根据情况在 config/xxx.yaml、config.py 中配置**
 
+* **2. [双塔模型](https://www.sbert.net/docs/pretrained_models.html#model-overview)**
 
-## 4、项目结构
 
-```
-.
-├── LICENSE
-├── README.md
-├── chinese_rbt12_L-12_H-768_A-12
-│   ├── bert_config_rbt12.json
-│   ├── bert_model.ckpt.index
-│   ├── bert_model.ckpt.meta
-│   ├── variable_name_mapping.json
-│   └── vocab.txt
-├── chinese_rbt4_L-4_H-768_A-12
-│   ├── bert_config_rbt4.json
-│   ├── bert_model.ckpt.index
-│   ├── bert_model.ckpt.meta
-│   ├── variable_name_mapping.json
-│   └── vocab.txt
-├── config
-│   └── ranking_model.yaml
-├── data
-│   ├── similarity_label_vocab.txt
-│   ├── test
-│   │   ├── test.label
-│   │   ├── test.seq1.in
-│   │   └── test.seq2.in
-│   ├── train
-│   │   ├── train.label
-│   │   ├── train.seq1.in
-│   │   └── train.seq2.in
-│   └── valid
-│       ├── valid.label
-│       ├── valid.seq1.in
-│       └── valid.seq2.in
-├── distill
-│   ├── README.md
-│   └── distillation.py
-├── models.py
-├── new.md
-├── nn
-│   ├── activations.py
-│   ├── callback.py
-│   ├── crf.py
-│   ├── layer.py
-│   ├── loss.py
-│   ├── lr_scheduler.py
-│   └── metric.py
-├── preprocess
-│   ├── config.py
-│   ├── data.py
-│   └── tokenization.py
-├── run_distill_tasks.py
-├── run_tasks.py
-├── save_model2onnx
-│   ├── README.md
-│   ├── frozen_pb_model
-│   ├── inferONNX.py
-│   ├── onnx_model
-│   ├── qarank2frozenpb.py
-│   └── qarank2onnx.py
-├── utils
-│   ├── addict.py
-│   ├── get_username.py
-│   ├── print_metrics.py
-│   └── send_email.py
-└── write_data_csv_to_seq_file.py
-```
+## 4、版本更新
+Version |Describe |传送门
+:-------|-------|-----
+v1.0 |交互模型 原始Tiny Roberta：baseline |
+v2.0 |交互模型 Big Roberta->distill->Tiny Roberta |[入口](https://github.com/xuyingjie521/Semantic-Similarity-Match/tree/main/distill)
+v3.0 |双塔模型 Sentence Bert 微调 |[入口](https://github.com/xuyingjie521/Semantic-Similarity-Match/tree/main/senbert)
 
-## 5、版本更新
-Version |Describe
-:-------|---
-v1.0 |原始Tiny Roberta：baseline
-v2.0 |Big Roberta->distill->Tiny Roberta
-
-## 6、结构原理图
+## 5、结构原理图
 
 * **finetune-Tiny-Roberta**
 
@@ -122,7 +58,12 @@ v2.0 |Big Roberta->distill->Tiny Roberta
 ![distilled-Tiny-Roberta](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distilled-Tiny-Roberta-picture.png)
 
 
-## 7、评估结果
+* **双塔模型 Sentence Bert 微调**
+
+![sbert](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/sbert_structrue.jpg)
+
+
+## 6、评估结果
 
 运行 run_tasks.py 开始训练并评测.
 
