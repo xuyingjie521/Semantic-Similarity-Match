@@ -77,13 +77,19 @@ v3.0 |双塔模型 Sentence Bert 微调 |[入口](https://github.com/xuyingjie52
 
 * **Big Roberta->distill->Tiny Roberta finetune的效果:**  
 
-![效果2](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distill_result.jpeg)  
+![效果3](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/distill_result.jpeg)  
+
+* **双塔模型 Sentence Bert 微调的效果:**  
+
+![效果4](https://github.com/xuyingjie521/Semantic-Similarity-Match/blob/main/images/sbert_result.jpg)  
+
 
 模型 |acc |输入说明
 :-------|------|----
 原始Tiny Roberta |0.8252 |动态词向量
 Roberta(rbt12)->distill->Tiny Roberta |0.8400(+0.0148) |动态词向量
 Roberta(rbt12) |0.8482(+0.023) |动态词向量
+双塔模型sbert finetune |0.8233 |动态词向量
 
 参考传统匹配模型对比：[各种模型评价](https://github.com/terrifyzhao/text_matching)
   
